@@ -436,3 +436,5 @@ pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/django,python,pycharm,pycharm+all
 .idea
+
+.static
