@@ -1,12 +1,20 @@
+from django.contrib.auth import get_user_model
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
-from django.contrib.sites.shortcuts import get_current_site
-from apps.account.serializers import *
+from drf_yasg.utils import swagger_auto_schema
+from apps.account.serializers import (RegisterSerializer,
+                                      ChangePasswordSerializer,
+                                      SendCodeSerializer,
+                                      RecoveryPasswordSerializer)
+
+User = get_user_model()
 
 
 class RegisterAPIView(APIView):
+
+    @swagger_auto_schema(request_body=RegisterSerializer)
     def post(self, request):
         serializer = RegisterSerializer(data=request.data, context={'request': self.request})
         serializer.is_valid(raise_exception=True)
@@ -31,6 +39,7 @@ class ActivationAPIView(APIView):
 class ChangePasswordAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(request_body=ChangePasswordSerializer)
     def post(self, request):
         serializers = ChangePasswordSerializer(data=request.data, context={'request': request})
         serializers.is_valid(raise_exception=True)
@@ -39,6 +48,7 @@ class ChangePasswordAPIView(APIView):
 
 
 class SendCodeAPIView(APIView):
+    @swagger_auto_schema(request_body=SendCodeSerializer)
     def post(self, request):
         serializer = SendCodeSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -47,6 +57,7 @@ class SendCodeAPIView(APIView):
 
 
 class RecoveryPasswordAPIView(APIView):
+    @swagger_auto_schema(request_body=RecoveryPasswordSerializer)
     def post(self, request):
         serializer = RecoveryPasswordSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
