@@ -10,5 +10,5 @@ urlpatterns = [
     path('send-code/', SendCodeAPIView.as_view()),
     path('recovery-password/', RecoveryPasswordAPIView.as_view()),
     path('login/', TokenObtainPairView.as_view()),
-    path('refresh/', TokenObtainPairView.as_view()),
+    path('refresh/', TokenRefreshView.as_view()),
 ]
