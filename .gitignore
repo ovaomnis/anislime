@@ -1,6 +1,6 @@
 # Created by https://www.toptal.com/developers/gitignore/api/django,python,pycharm,pycharm+all
 # Edit at https://www.toptal.com/developers/gitignore?templates=django,python,pycharm,pycharm+all
-
+static/
 ### Django ###
 *.log
 *.pot
@@ -438,4 +438,4 @@ pyrightconfig.json
 # End of https://www.toptal.com/developers/gitignore/api/django,python,pycharm,pycharm+all
 .idea
 
-.static/
+./static
