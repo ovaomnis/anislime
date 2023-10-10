@@ -24,7 +24,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         request = self.context.get('request')
         user = User.objects.create_user(**validated_data)
-        host = request.build_absolute_uri('/')
+        host = request.build_absolute_uri('/')[:-1]
         send_activation_email.delay(email=user.email, code=user.code, host=host)
         return user
 
