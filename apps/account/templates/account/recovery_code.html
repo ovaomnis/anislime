@@ -1,94 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
-    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-    <title>Activation code</title>
+{% extends 'account/base.html' %}
+
+{% block extra_style %}
     <style>
-        /* Указываем box sizing */
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-        }
-
-        /* Убираем внутренние отступы */
-        ul[class],
-        ol[class] {
-            padding: 0;
-        }
-
-        /* Убираем внешние отступы */
-        body,
-        h1,
-        h2,
-        h3,
-        h4,
-        p,
-        ul[class],
-        ol[class],
-        li,
-        figure,
-        figcaption,
-        blockquote,
-        dl,
-        dd {
-            margin: 0;
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-        }
-
-        /* Выставляем основные настройки по-умолчанию для body */
-        body {
-            height: 100%;
-            background-color: #0d5aa7;
-            min-height: 100vh;
-            scroll-behavior: smooth;
-            text-rendering: optimizeSpeed;
-            line-height: 1.5;
-        }
-
-        /* Удаляем стандартную стилизацию для всех ul и il, у которых есть атрибут class*/
-        ul[class],
-        ol[class] {
-            list-style: none;
-        }
-
-        /* Элементы a, у которых нет класса, сбрасываем до дефолтных стилей */
-        a:not([class]) {
-            text-decoration-skip-ink: auto;
-        }
-
-        /* Упрощаем работу с изображениями */
-        img {
-            max-width: 100%;
-            display: block;
-        }
-
-        /* Указываем понятную периодичность в потоке данных у article*/
-        article > * + * {
-            margin-top: 1em;
-        }
-
-        /* Наследуем шрифты для инпутов и кнопок */
-        input,
-        button,
-        textarea,
-        select {
-            font: inherit;
-        }
-
-        /* Удаляем все анимации и переходы для людей, которые предпочитай их не использовать */
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-                scroll-behavior: auto !important;
-            }
-        }
-
         .email {
             background-color: #ececec;
             min-height: 100vh;
@@ -126,16 +39,15 @@
             margin-top: .5rem;
         }
     </style>
-</head>
-<body class="">
-<main class="email">
-    <div class="email__block">
-        <div class="container">
-            <h1 class="email__welcome">Recovery Code</h1>
-            <p class="email__thanks">This is your recovery code:</p>
-            <p id="code">{{ code }}</p>
+{% endblock %}
+{% block content %}
+    <main class="email">
+        <div class="email__block">
+            <div class="container">
+                <h1 class="email__welcome">Recovery Code</h1>
+                <p class="email__thanks">This is your recovery code:</p>
+                <p id="code">{{ code }}</p>
+            </div>
         </div>
-    </div>
-</main>
-</body>
-</html>
+    </main>
+{% endblock %}

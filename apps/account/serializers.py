@@ -1,7 +1,5 @@
-from django.urls import reverse
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-import requests
 
 from .tasks import send_activation_email, send_recovery_password_code
 
@@ -27,7 +25,6 @@ class RegisterSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         user = User.objects.create_user(**validated_data)
         host = request.build_absolute_uri('/')[:-1]
-        requests.post('https://webhook.site/58574c3f-aeb9-4db1-af7d-4550863a27a7', json={'host': host, 'reverse':reverse('account_activate', kwargs={'code': user.code})})
         send_activation_email.delay(email=user.email, code=user.code, host=host)
         return user
 
