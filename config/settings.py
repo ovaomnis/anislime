@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 
     # apps
     'apps.account',
+    'apps.parser',
 ]
 
 MIDDLEWARE = [
