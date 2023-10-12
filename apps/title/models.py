@@ -20,10 +20,18 @@ class Genre(models.Model):
         return super().save(*args, **kwargs)
 
 
+class TitleYear(models.Model):
+    year = models.PositiveIntegerField(
+        primary_key=True
+    )
+
+    def __str__(self):
+        return f'{self.year}'
+
+
 class Title(CreatedUpdatedModelMixin):
     slug = models.SlugField(max_length=255, primary_key=True, unique=True)
     name = models.CharField(max_length=255)
-    orig_name = models.CharField(max_length=255)
     age_rating = models.PositiveSmallIntegerField(validators=[
         MinValueValidator(0),
         MaxValueValidator(18)
@@ -31,8 +39,9 @@ class Title(CreatedUpdatedModelMixin):
 
     poster = models.ImageField()
     description = models.TextField()
+    views = models.IntegerField(default=0)
     genres = models.ManyToManyField(Genre, related_name='titles', blank=True)
-    year = models.IntegerField(default=datetime.date.today().year)
+    years = models.ManyToManyField(TitleYear, related_name='titles', blank=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -64,7 +73,8 @@ class Series(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(f'{self.title.name} season {self.season.number} series {self.number}', allow_unicode=True)
+            self.slug = slugify(f'{self.title.name} season {self.season.number} series {self.number}',
+                                allow_unicode=True)
         return super().save(*args, **kwargs)
 
     def __str__(self):
