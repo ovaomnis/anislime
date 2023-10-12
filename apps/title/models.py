@@ -1,10 +1,10 @@
-import datetime
-
 from django.db import models
 from django.utils.text import slugify
 from django.core.validators import MinValueValidator, MaxValueValidator
 from core.models import CreatedUpdatedModelMixin
-from django.utils import timezone
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 class Genre(models.Model):
@@ -42,6 +42,8 @@ class Title(CreatedUpdatedModelMixin):
     views = models.IntegerField(default=0)
     genres = models.ManyToManyField(Genre, related_name='titles', blank=True)
     years = models.ManyToManyField(TitleYear, related_name='titles', blank=True)
+    followers = models.ManyToManyField(User, related_name='follows', blank=True)
+    favourite_by = models.ManyToManyField(User, related_name='favourites', blank=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -70,6 +72,7 @@ class Series(models.Model):
     season = models.ForeignKey(Season, on_delete=models.CASCADE, related_name='series')
     title = models.ForeignKey(Title, on_delete=models.CASCADE, related_name='series')
     video = models.FileField(upload_to='videos/')
+    likes = models.ManyToManyField(User, related_name='likes')
 
     def save(self, *args, **kwargs):
         if not self.slug:
