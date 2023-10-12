@@ -72,7 +72,7 @@ class Series(models.Model):
     season = models.ForeignKey(Season, on_delete=models.CASCADE, related_name='series')
     title = models.ForeignKey(Title, on_delete=models.CASCADE, related_name='series')
     video = models.FileField(upload_to='videos/')
-    likes = models.ManyToManyField(User, related_name='likes')
+    likes = models.ManyToManyField(User, related_name='likes', blank=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
