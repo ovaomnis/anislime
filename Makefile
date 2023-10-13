@@ -7,6 +7,8 @@ redis-stop:
 	docker stop anismile_redis
 celery:
 	celery -A config worker --loglevel=INFO
+celery-beat:
+	celery -A config beat --loglevel=INFO
 migrate:
 	python3 manage.py makemigrations
 	python3 manage.py migrate

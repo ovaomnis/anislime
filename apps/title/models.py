@@ -37,7 +37,7 @@ class Title(CreatedUpdatedModelMixin):
         MaxValueValidator(18)
     ])
 
-    poster = models.ImageField()
+    poster = models.ImageField(upload_to='title_posters')
     description = models.TextField()
     views = models.IntegerField(default=0)
     genres = models.ManyToManyField(Genre, related_name='titles', blank=True)
