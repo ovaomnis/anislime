@@ -5,6 +5,8 @@ from apps.title.serializers import GenreSerializer, TitleDetailSerializer, Seaso
     TitleListSerializer
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
 
 
 class GenreAPIView(viewsets.ModelViewSet):
@@ -16,8 +18,11 @@ class GenreAPIView(viewsets.ModelViewSet):
 class TitleAPIView(viewsets.ModelViewSet):
     queryset = Title.objects.all()
     serializer_class = TitleDetailSerializer
-
     # permission_classes = [IsAuthenticatedOrReadOnly,]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['genres', 'age_rating', 'years']
+    search_fields = ['name', 'description']
+    ordering_fields = ['name', 'views']
 
     def get_serializer_class(self):
         if self.action == 'list':
