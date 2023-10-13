@@ -74,7 +74,6 @@ class SeasonSerializer(serializers.ModelSerializer):
 
 class SeriesSerializer(serializers.ModelSerializer):
     slug = serializers.ReadOnlyField()
-    likes = serializers.ReadOnlyField()
 
     class Meta:
         model = Series
@@ -89,7 +88,7 @@ class SeriesSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         instance = super().create(validated_data)
-        return validated_data
+        return instance
 
 class TitleListSerializer(serializers.ModelSerializer):
     class Meta:

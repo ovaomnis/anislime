@@ -5,6 +5,6 @@ from .models import Series
 
 
 @receiver(post_save, sender=Series)
-def post_save_product_signal(sender, instance, created, **kwargs):
+def post_save_series_signal(sender, instance, created, **kwargs):
     if created:
         print(instance.title.followers.all())
