@@ -4,17 +4,20 @@ import requests
 
 from bs4 import BeautifulSoup as BS
 
+# from .utils import slugify_uri
+
+HOST = 'https://jut.su/'
+USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36'
+
+
+def slugify_uri(uri: str) -> str:
+    return re.sub(r'[./]', '-', uri).strip('-')
+
 
 class BaseParse:
-    HOST = 'https://jut.su/'
-    USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36'
 
     def create_request(self):
         raise NotImplemented('create_request not implemented')
-
-    @staticmethod
-    def slugify_uri(uri: str) -> str:
-        return re.sub(r'[./]', '-', uri).strip('-')
 
 
 class ParseSeries(BaseParse):
@@ -36,7 +39,7 @@ class ParseSeries(BaseParse):
 
     def create_request(self):
         # print(self.link)
-        self.req = requests.get(self.link, headers={'User-agent': self.USER_AGENT})
+        self.req = requests.get(self.link, headers={'User-agent': USER_AGENT})
 
     def get_soup(self):
         return BS(self.req.content, 'lxml')
@@ -52,19 +55,15 @@ class ParseSeasonSeries(BaseParse):
 
     def __init__(self, uri: str):
         self.uri = uri
-        self.slug = self.slugify_uri(uri)
+        self.slug = slugify_uri(uri)
         self.file_name = self.slug
         self.req = None
         self.image = None
         self.name = None
-        self.age_rating = None
-        self.years = []
-        self.status = None
-        self.orig_name = None
+        self.description = None
         self.genres = []
         self.links = []
         self.soup: BS = None
-        self.__additional = []
         self.create_request()
         self.set_up_soup()
 
@@ -81,10 +80,10 @@ class ParseSeasonSeries(BaseParse):
 
     @property
     def url(self):
-        return self.HOST + self.__uri
+        return HOST + self.__uri
 
     def create_request(self):
-        self.req = requests.get(self.url, headers={'User-Agent': self.USER_AGENT})
+        self.req = requests.get(self.url, headers={'User-Agent': USER_AGENT})
 
     def get_loaded(self):
         try:
@@ -107,25 +106,23 @@ class ParseSeasonSeries(BaseParse):
         self.soup = BS(self.req.content, 'lxml')
 
     def start(self):
-        # soup = self.get_soup()
-        # links = soup.select('.short-btn')
-        # loaded_links = self.get_loaded()
-        # is_updated = False
-        #
-        # for link in links:
-        #     href = re.sub(r'[./]', '-', link.get('href'))[1:]
-        #     if href not in loaded_links:
-        #         is_updated = True
-        #         print(href)
-        #         loaded_links.append(href)
-        #
-        # if is_updated:
-        #     self.update_loaded(loaded_links)
+        loaded_links = self.get_loaded()
+        is_updated = False
+
         for attr in self.__dir__():
             if attr.startswith('parse'):
                 method = getattr(self, attr)
                 if callable(method):
                     method()
+
+        for link in self.links:
+            link_slug = slugify_uri(link)
+            if link_slug not in loaded_links:
+                loaded_links.append(slugify_uri(link_slug))
+                is_updated = True
+
+        if is_updated:
+            self.update_loaded(loaded_links)
 
     def parse_links(self):
         for i in self.soup.select('.short-btn'):
@@ -143,23 +140,17 @@ class ParseSeasonSeries(BaseParse):
         else:
             print('Image not found')
 
-    def parse_additional(self):
-        self.__additional = self.soup.select_one('.under_video_additional')
-        print(re.split(r'\sЖанры:\s', str(self.__additional)))
-
-
-    # def parse_genres(self):
-    #     for i in re.split(r"\bи\b|,", self.__additional[0].split(':')[1]):
-    #         self.genres.append(i.replace('Аниме', '').strip())
-    #
-    # def parse_years(self):
-    #     for i in re.split(r"\bи\b|,", self.__additional[1].split(':')[1]):
-    #         self.years.append(i.replace('Аниме', '').strip())
-    #
-    # def parse_orig_name(self):
-    #     print(self.__additional[2])
+    def parse_genres(self):
+        additional = self.soup.select_one('.under_video_additional').text
+        genres = [i.replace('Аниме', '').strip() for i in
+                  re.split(r',|\sи\s', additional.split('.')[0].replace('Жанры:', ''))]
+        print(genres)
 
 
 if __name__ == '__main__':
-    pss = ParseSeasonSeries('dekiru-neko-wa-kyou/')
+    pss = ParseSeasonSeries('full-metal-alchemist/')
     pss.start()
+    print(pss.image)
+    print(pss.name)
+    print(pss.genres)
+    print(pss.description)
