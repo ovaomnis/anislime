@@ -59,6 +59,7 @@ class TitleDetailSerializer(serializers.ModelSerializer):
         })
         return rep
 
+
 class SeasonSerializer(serializers.ModelSerializer):
     slug = serializers.ReadOnlyField()
 
@@ -90,9 +91,10 @@ class SeriesSerializer(serializers.ModelSerializer):
         instance = super().create(validated_data)
         return instance
 
+
 class TitleListSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = ('name', 'poster',  'slug')
+        fields = ('name', 'poster', 'slug')
         model = Title
 
     def to_representation(self, instance):
