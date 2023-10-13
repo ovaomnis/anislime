@@ -1,6 +1,7 @@
 # Created by https://www.toptal.com/developers/gitignore/api/django,python,pycharm,pycharm+all
 # Edit at https://www.toptal.com/developers/gitignore?templates=django,python,pycharm,pycharm+all
 static/
+media/
 ### Django ###
 *.log
 *.pot
@@ -11,6 +12,7 @@ db.sqlite3
 db.sqlite3-journal
 media
 .logs
+apps/parser/loaded/
 
 # If your build process includes running collectstatic, then you probably don't need or want to include staticfiles/
 # in your Git repository. Update and uncomment the following line accordingly.

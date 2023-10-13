@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     # libs
     'rest_framework',
     'rest_framework_simplejwt',
@@ -45,6 +46,8 @@ INSTALLED_APPS = [
 
     # apps
     'apps.account',
+    'apps.parser',
+    'apps.title',
 ]
 
 MIDDLEWARE = [
@@ -116,9 +119,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Bishkek'
 
 USE_I18N = True
 
