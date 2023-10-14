@@ -11,6 +11,6 @@ app.autodiscover_tasks()
 app.conf.beat_schedule = {
     'parse_from_tracker': {
         'task': 'apps.parser.tasks.parse_from_tracker',
-        'schedule': crontab(minute=16, hour=15)
+        'schedule': crontab(minute=30, hour=1)
     }
 }
