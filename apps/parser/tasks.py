@@ -11,3 +11,4 @@ def parse_from_tracker():
         ParseSeasonSeries(anime.uri, anime.repeat)
         if not anime.repeat:
             anime.parsed = True
+            anime.save()

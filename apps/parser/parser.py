@@ -147,6 +147,8 @@ class ParseSeries(BaseParse):
         soup = self.soup
         video_src = soup.find('video').find('source', attrs={'label': '480p'}).get('src')
         video_url = f'{TITLE_VIDEO_URL + self.slug}.mp4'
+        if not TITLE_VIDEO_ROOT.exists():
+            TITLE_VIDEO_ROOT.mkdir(parents=True, exist_ok=True)
 
         if not os.path.exists(TITLE_VIDEO_ROOT / self.slug):
             chunk_size = 258
