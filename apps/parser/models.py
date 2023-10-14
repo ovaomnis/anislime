@@ -7,6 +7,7 @@ class TrackAnime(models.Model):
     slug = models.SlugField(primary_key=True, max_length=255)
     uri = models.CharField(max_length=255)
     repeat = models.BooleanField(default=False)
+    parsed = models.BooleanField(default=False)
 
     def save(self, **kwargs):
         if not self.slug:
