@@ -17,7 +17,7 @@ class TrackAnimeAPIView(mixins.CreateModelMixin,
     queryset = TrackAnime.objects.all()
     serializer_class = TrackAnimeSerializer
 
-    # permission_classes = (IsAdminUser,)
+    permission_classes = (IsAdminUser,)
 
     @action(detail=False, methods=['GET'])
     def track(self, request):
