@@ -104,3 +104,10 @@ class TitleListSerializer(serializers.ModelSerializer):
             'seasons': Season.objects.filter(series__in=instance.series.all()).distinct().count(),
         })
         return rep
+
+
+class RecommendationSerializer(serializers.Serializer):
+    slug = serializers.ReadOnlyField()
+    name = serializers.ReadOnlyField()
+    poster = serializers.ImageField()
+    views = serializers.ReadOnlyField()
