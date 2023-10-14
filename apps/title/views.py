@@ -4,9 +4,11 @@ from apps.title.models import Genre, Title, Season, Series
 from apps.title.serializers import GenreSerializer, TitleDetailSerializer, SeasonSerializer, SeriesSerializer, \
     TitleListSerializer
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
+
+from .permissions import IsAdminOrReadOnlyPermission
 
 
 class GenreAPIView(viewsets.ModelViewSet):
@@ -18,7 +20,7 @@ class GenreAPIView(viewsets.ModelViewSet):
 class TitleAPIView(viewsets.ModelViewSet):
     queryset = Title.objects.all()
     serializer_class = TitleDetailSerializer
-    # permission_classes = [IsAuthenticatedOrReadOnly,]
+    permission_classes = [IsAdminOrReadOnlyPermission,]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['genres', 'age_rating', 'years']
     search_fields = ['name', 'description']
@@ -57,7 +59,7 @@ class TitleAPIView(viewsets.ModelViewSet):
             return Response('added to favourites')
 
     def get_permissions(self):
-        if self.action == 'follow':
+        if self.action in ['follow', 'add_favourite']:
             self.permission_classes = [IsAuthenticated]
         return super().get_permissions()
 
@@ -65,10 +67,10 @@ class TitleAPIView(viewsets.ModelViewSet):
 class SeasonAPIView(viewsets.ModelViewSet):
     queryset = Season.objects.all()
     serializer_class = SeasonSerializer
-    # permission_classes = [IsAuthenticatedOrReadOnly,]
+    permission_classes = [IsAdminOrReadOnlyPermission,]
 
 
 class SeriesAPIView(viewsets.ModelViewSet):
     queryset = Series.objects.all()
     serializer_class = SeriesSerializer
-    # permission_classes = [IsAuthenticatedOrReadOnly,]
+    permission_classes = [IsAdminOrReadOnlyPermission,]
