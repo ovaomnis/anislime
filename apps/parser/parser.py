@@ -145,7 +145,7 @@ class ParseSeries(BaseParse):
 
     def parse_video(self):
         soup = self.soup
-        video_src = soup.find('video').find('source', attrs={'label': '1080p'}).get('src')
+        video_src = soup.find('video').find('source', attrs={'label': '480p'}).get('src')
         video_url = f'{TITLE_VIDEO_URL + self.slug}.mp4'
 
         if not os.path.exists(TITLE_VIDEO_ROOT / self.slug):
