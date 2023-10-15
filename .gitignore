@@ -4,7 +4,8 @@
 # Static
 static/
 media/
-
+logs/
+.celery.py.swp
 # parser
 loaded/
 ### Django ###
