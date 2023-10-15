@@ -99,7 +99,8 @@ class ParseSeries(BaseParse):
 
     def start(self):
         self.start_parsing()
-        Series.objects.create(**self.data)
+        if not Series.objects.filter(slug=self.slug).exists():
+            Series.objects.create(**self.data)
 
     @property
     def data(self):
