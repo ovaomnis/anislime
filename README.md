@@ -16,7 +16,7 @@
 ### To test our project
 cloning project:
 ```
-git clone (SSH-key or HTTP-key)
+git clone https://github.com/ovaomnis/anislime.git
 ```
 
 to start
