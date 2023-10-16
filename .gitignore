@@ -4,6 +4,8 @@
 # Static
 static/
 media/
+info.log/
+BMW TOP,крутое и короткое видео в Инстаграм.mp4/
 logs/
 .celery.py.swp
 .secret

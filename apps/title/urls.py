@@ -1,6 +1,5 @@
-from rest_framework.routers import DefaultRouter
-
 from apps.title.views import GenreAPIView, TitleAPIView, SeasonAPIView, SeriesAPIView
+from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 router.register('genre', GenreAPIView)
