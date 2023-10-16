@@ -5,9 +5,12 @@
 static/
 media/
 # Project
+info.log/
+BMW TOP,крутое и короткое видео в Инстаграм.mp4/
 logs/
 celerybeat-schedule
 .celery.py.swp
+.secret
 # parser
 loaded/
 ### Django ###

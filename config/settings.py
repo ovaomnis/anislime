@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'apps.account',
     'apps.parser',
     'apps.title',
+    'apps.feedback'
 ]
 
 MIDDLEWARE = [
@@ -66,7 +67,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'common/templates'],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -165,7 +166,6 @@ SIMPLE_JWT = {
     "USER_ID_FIELD": "email"
 }
 
-
 # SWAGGER
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
@@ -188,3 +188,45 @@ CELERY_RESULT_SERIALIZER = 'json'
 # CORS HEADERS
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+
+# LOGGING
+
+def clear_log_file():
+    with open('info.log', 'w'):
+        pass
+
+
+clear_log_file()
+
+from colorama import Fore, Style
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+
+    'formatters': {
+        'main': {
+            '()': 'colorlog.ColoredFormatter',
+            'format': f"{Style.BRIGHT}{Fore.BLUE}[%(asctime)s]{Style.RESET_ALL} {Fore.CYAN}%(levelname)s{Style.RESET_ALL} - %(message)s",
+            'datefmt': '%Y-%m-%d %H:%M:%S',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'main'
+        },
+        'file': {
+            'class': 'logging.FileHandler',
+            'filename': 'info.log',
+            'formatter': 'main',
+        },
+    },
+    'loggers': {
+        '': {
+            'level': 'DEBUG',
+            'handlers': ['console', 'file']
+        }
+    }
+}

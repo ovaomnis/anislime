@@ -39,7 +39,7 @@ class Title(CreatedUpdatedModelMixin):
 
     poster = models.ImageField(upload_to='title_posters')
     description = models.TextField()
-    views = models.IntegerField(default=0)
+    views = models.PositiveIntegerField(default=0)
     genres = models.ManyToManyField(Genre, related_name='titles', blank=True)
     years = models.ManyToManyField(TitleYear, related_name='titles', blank=True)
     followers = models.ManyToManyField(User, related_name='follows', blank=True)
