@@ -1,13 +1,13 @@
-from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import viewsets
 from rest_framework.decorators import action
+from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
 from apps.title.models import Genre, Title, Season, Series
 from apps.title.serializers import GenreSerializer, TitleDetailSerializer, SeasonSerializer, SeriesSerializer, \
     TitleListSerializer
-from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import SearchFilter, OrderingFilter
-
 from .permissions import IsAdminOrReadOnlyPermission
 
 
@@ -20,7 +20,7 @@ class GenreAPIView(viewsets.ModelViewSet):
 class TitleAPIView(viewsets.ModelViewSet):
     queryset = Title.objects.all()
     serializer_class = TitleDetailSerializer
-    permission_classes = [IsAdminOrReadOnlyPermission,]
+    permission_classes = [IsAdminOrReadOnlyPermission, ]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['genres', 'age_rating', 'years']
     search_fields = ['name', 'description']
@@ -67,10 +67,26 @@ class TitleAPIView(viewsets.ModelViewSet):
 class SeasonAPIView(viewsets.ModelViewSet):
     queryset = Season.objects.all()
     serializer_class = SeasonSerializer
-    permission_classes = [IsAdminOrReadOnlyPermission,]
+    permission_classes = [IsAdminOrReadOnlyPermission, ]
 
 
 class SeriesAPIView(viewsets.ModelViewSet):
     queryset = Series.objects.all()
     serializer_class = SeriesSerializer
-    permission_classes = [IsAdminOrReadOnlyPermission,]
+    permission_classes = [IsAdminOrReadOnlyPermission, ]
+
+    @action(detail=True, methods=['POST'])
+    def like(self, reqeust, pk):
+        series_obj = self.get_object()
+        like = series_obj.likes.filter(email=reqeust.user.email)
+        if like:
+            series_obj.likes.remove(like[0])
+            return Response('unlike')
+        else:
+            series_obj.likes.add(self.request.user)
+            return Response('like')
+    
+    def get_permissions(self):
+        if self.action == 'like':
+            self.permission_classes = [IsAuthenticated]
+        return super().get_permissions()

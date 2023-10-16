@@ -1,5 +1,7 @@
-from apps.title.models import Genre, Title, Season, Series, TitleYear
 from rest_framework import serializers
+
+from apps.feedback.serializers import ReviewSerializer, CommentSerializer
+from apps.title.models import Genre, Title, Season, Series, TitleYear
 
 
 class GenreSerializer(serializers.ModelSerializer):
@@ -29,10 +31,11 @@ class TitleYearSerializer(serializers.ModelSerializer):
 
 class TitleDetailSerializer(serializers.ModelSerializer):
     slug = serializers.ReadOnlyField()
+    reviews = ReviewSerializer(many=True, read_only=True)
 
     class Meta:
         model = Title
-        fields = ('slug', 'name', 'poster', 'age_rating', 'description', 'views', 'genres', 'years')
+        fields = ('slug', 'name', 'poster', 'age_rating', 'description', 'views', 'genres', 'years', 'reviews',)
         read_only_fields = ('years',)
 
     def validate_name(self, name):
@@ -55,7 +58,7 @@ class TitleDetailSerializer(serializers.ModelSerializer):
         rep = super().to_representation(instance)
         rep.update({
             'followers': instance.followers.count(),
-            'favourite_by': instance.favourite_by.count()
+            'favourite_by': instance.favourite_by.count(),
         })
         return rep
 
@@ -75,6 +78,7 @@ class SeasonSerializer(serializers.ModelSerializer):
 
 class SeriesSerializer(serializers.ModelSerializer):
     slug = serializers.ReadOnlyField()
+    comments = CommentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Series
@@ -90,6 +94,11 @@ class SeriesSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         instance = super().create(validated_data)
         return instance
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['likes'] = instance.likes.count()
+        return rep
 
 
 class TitleListSerializer(serializers.ModelSerializer):
