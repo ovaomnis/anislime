@@ -1,26 +1,30 @@
 from apps.title.models import Genre, Title, Season, Series
-from apps.title.serializers import GenreSerializer, TitleDetailSerializer, SeasonSerializer, SeriesSerializer, \
-    TitleListSerializer, RecommendationSerializer
+from apps.title.serializers import GenreSerializer, TitleDetailSerializer, SeasonSerializer, SeriesDetailSerializer, \
+    SeriesListSerializer, TitleListSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
-from rest_framework.views import APIView
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
-from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.pagination import PageNumberPagination
+from django.db.models import Count
+
+
+class NoPagination(PageNumberPagination):
+    page_size = None
 
 
 class GenreAPIView(viewsets.ModelViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly,]
+    permission_classes = [IsAuthenticatedOrReadOnly, ]
 
 
 class TitleAPIView(viewsets.ModelViewSet):
     queryset = Title.objects.all()
     serializer_class = TitleDetailSerializer
 
-    permission_classes = [IsAuthenticatedOrReadOnly,]
+    permission_classes = [IsAuthenticatedOrReadOnly, ]
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -54,12 +58,20 @@ class TitleAPIView(viewsets.ModelViewSet):
             obj.favourite_by.add(request.user)
             return Response('added to favourites')
 
-    @action(detail=True, methods=['post'])
-    def view(self, request, *args, **kwargs):
+    @action(detail=True, methods=['get'])
+    def series(self, request, pk):
         obj = self.get_object()
-        obj.views += 1
-        obj.save(update_fields=['views'])
-        return Response('watched')
+        data = {}
+        for series in obj.series.all():
+            if not data.get(series.season.slug, None):
+                data.update({
+                    series.season.slug: [SeriesListSerializer(series).data]
+                })
+            else:
+                data[series.season.slug].append(SeriesListSerializer(series).data)
+        print(data)
+        serializer = SeriesListSerializer(instance=obj.series.all(), many=True)
+        return Response(data)
 
     def get_permissions(self):
         if self.action == 'follow':
@@ -70,26 +82,17 @@ class TitleAPIView(viewsets.ModelViewSet):
 class SeasonAPIView(viewsets.ModelViewSet):
     queryset = Season.objects.all()
     serializer_class = SeasonSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly,]
+    permission_classes = [IsAuthenticatedOrReadOnly, ]
 
 
 class SeriesAPIView(viewsets.ModelViewSet):
     queryset = Series.objects.all()
-    serializer_class = SeriesSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly,]
+    serializer_class = SeriesDetailSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly, ]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['title']
 
-
-class RecommendationAPIView(APIView):
-    filter_backend = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['genres']
-    search_fields = ['genres']
-    ordering_fields = ['views']
-
-    def get_queryset(self):
-        queryset = Title.objects.all()
-        return queryset.order_by('-views')[:5]
-
-    def get(self, request):
-        titles = self.get_queryset()
-        serializer = RecommendationSerializer(titles, many=True)
-        return Response(serializer.data, status=200)
+    def get_serializer_class(self):
+        if self.action == 'list':
+            self.serializer_class = SeriesListSerializer
+        return super().get_serializer_class()
