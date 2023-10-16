@@ -75,7 +75,7 @@ class TitleDetailSerializer(serializers.ModelSerializer):
             'followers': instance.followers.count(),
             'favourite_by': instance.favourite_by.count(),
             'recommendations': TitleListSerializer(
-                instance=Title.objects.filter(Q(genres__in=instance.genres.all()) & ~Q(slug=instance.slug)),
+                instance=Title.objects.filter(Q(genres__in=instance.genres.all()) & ~Q(slug=instance.slug)).distinct(),
                 many=True).data
         })
         return rep
@@ -122,4 +122,4 @@ class SeriesDetailSerializer(serializers.ModelSerializer):
 class SeriesListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Series
-        fields = ('slug', 'name')
+        fields = ('slug', 'number')
