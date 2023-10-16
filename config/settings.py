@@ -165,7 +165,6 @@ SIMPLE_JWT = {
     "USER_ID_FIELD": "email"
 }
 
-
 # SWAGGER
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
@@ -188,3 +187,40 @@ CELERY_RESULT_SERIALIZER = 'json'
 # CORS HEADERS
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+
+def clear_log_file():
+    with open('info.log', 'w'):
+        pass
+
+
+clear_log_file()
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+
+    'formatters': {
+        'main': {
+            'format': '{levelname} --- {asctime} --- {module} --- {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'main'
+        },
+        'file': {
+            'class': 'logging.FileHandler',
+            'filename': 'info.log',
+            'formatter': 'main',
+        },
+    },
+    'loggers': {
+        '': {
+            'level': 'DEBUG',
+            'handlers': ['console', 'file']
+        }
+    }
+}

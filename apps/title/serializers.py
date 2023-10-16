@@ -106,8 +106,16 @@ class TitleListSerializer(serializers.ModelSerializer):
         return rep
 
 
-class RecommendationSerializer(serializers.Serializer):
+class RecommendationSerializer(serializers.ModelSerializer):
     slug = serializers.ReadOnlyField()
     name = serializers.ReadOnlyField()
     poster = serializers.ImageField()
+    genres = serializers.SerializerMethodField()
     views = serializers.ReadOnlyField()
+
+    class Meta:
+        model = Title
+        fields = ('slug', 'name', 'poster', 'genres', 'views')
+
+    def get_genres(self, obj):
+        return [genre.name for genre in obj.genres.all()]

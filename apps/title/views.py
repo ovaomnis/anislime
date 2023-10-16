@@ -1,11 +1,13 @@
 from apps.title.models import Genre, Title, Season, Series
 from apps.title.serializers import GenreSerializer, TitleDetailSerializer, SeasonSerializer, SeriesSerializer, \
     TitleListSerializer, RecommendationSerializer
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework.filters import SearchFilter, OrderingFilter
 
 
 class GenreAPIView(viewsets.ModelViewSet):
@@ -78,7 +80,16 @@ class SeriesAPIView(viewsets.ModelViewSet):
 
 
 class RecommendationAPIView(APIView):
+    filter_backend = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['genres']
+    search_fields = ['genres']
+    ordering_fields = ['views']
+
+    def get_queryset(self):
+        queryset = Title.objects.all()
+        return queryset.order_by('-views')[:5]
+
     def get(self, request):
-        title = Title.objects.order_by('-views')[:5]
-        serializer = RecommendationSerializer(title, many=True)
+        titles = self.get_queryset()
+        serializer = RecommendationSerializer(titles, many=True)
         return Response(serializer.data, status=200)

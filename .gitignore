@@ -2,6 +2,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=django,python,pycharm,pycharm+all
 static/
 media/
+info.log/
 ### Django ###
 *.log
 *.pot
