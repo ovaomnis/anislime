@@ -206,7 +206,7 @@ LOGGING = {
 
     'formatters': {
         'main': {
-            'format': '[{asctime}] {levelname} {module} - {message}',
+            'format': '[{asctime}] [{levelname}] {module} - {message}',
             'style': '{',
         }
     },
@@ -219,6 +219,7 @@ LOGGING = {
             'class': 'logging.FileHandler',
             'filename': 'info.log',
             'formatter': 'main',
+            'mode': 'w'
         },
     },
     'loggers': {
