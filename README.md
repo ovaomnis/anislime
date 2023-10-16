@@ -24,10 +24,30 @@ installation and dependencies:
 ```
 pip3 install -r requirements.txt
 ```
-
+create virtual environment:
+```
+python -m venv <you_env_name>
+```
+activate virtual evnironment:
+>if you using windows:
+>>```
+>><you_env_name>\Scripts\activate
+>>```
+>if you using linux:
+>>```
+>>. <you_env_name>/bin/activate
+>>```
 running the server: 
 ```
 python3 manage.py runserver
+```
+running the celery: 
+```
+celery -A config worker --loglevel=INFO
+```
+running the celery beat: 
+```
+celery -A config beat --loglevel=INFO
 ```
 
 ## API Allows
