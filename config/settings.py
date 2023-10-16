@@ -198,14 +198,17 @@ def clear_log_file():
 
 clear_log_file()
 
+from colorama import Fore, Style
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
 
     'formatters': {
         'main': {
-            'format': '{levelname} --- {asctime} --- {module} --- {message}',
-            'style': '{',
+            '()': 'colorlog.ColoredFormatter',
+            'format': f"{Style.BRIGHT}{Fore.BLUE}[%(asctime)s]{Style.RESET_ALL} {Fore.CYAN}%(levelname)s{Style.RESET_ALL} - %(message)s",
+            'datefmt': '%Y-%m-%d %H:%M:%S',
         },
     },
     'handlers': {
