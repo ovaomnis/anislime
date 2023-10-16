@@ -189,6 +189,8 @@ CELERY_RESULT_SERIALIZER = 'json'
 CORS_ALLOW_ALL_ORIGINS = True
 
 
+# LOGGING
+
 def clear_log_file():
     with open('info.log', 'w'):
         pass
