@@ -4,7 +4,9 @@
 # Static
 static/
 media/
+# Project
 logs/
+celerybeat-schedule
 .celery.py.swp
 # parser
 loaded/
