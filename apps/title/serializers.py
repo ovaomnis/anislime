@@ -1,3 +1,4 @@
+from django.db.models import Q
 from rest_framework import serializers
 
 from apps.feedback.serializers import ReviewSerializer, CommentSerializer
@@ -73,8 +74,9 @@ class TitleDetailSerializer(serializers.ModelSerializer):
         rep.update({
             'followers': instance.followers.count(),
             'favourite_by': instance.favourite_by.count(),
-            'recommendations': TitleListSerializer(instance=Title.objects.filter(genres__in=instance.genres.all()),
-                                                   many=True).data
+            'recommendations': TitleListSerializer(
+                instance=Title.objects.filter(Q(genres__in=instance.genres.all()) & ~Q(slug=instance.slug)),
+                many=True).data
         })
         return rep
 
