@@ -1,5 +1,7 @@
-from apps.title.models import Genre, Title, Season, Series, TitleYear
 from rest_framework import serializers
+
+from apps.feedback.serializers import ReviewSerializer, CommentSerializer
+from apps.title.models import Genre, Title, Season, Series, TitleYear
 
 
 class GenreSerializer(serializers.ModelSerializer):
@@ -43,10 +45,11 @@ class TitleListSerializer(serializers.ModelSerializer):
 
 class TitleDetailSerializer(serializers.ModelSerializer):
     slug = serializers.ReadOnlyField()
+    reviews = ReviewSerializer(many=True, read_only=True)
 
     class Meta:
         model = Title
-        fields = ('slug', 'name', 'poster', 'age_rating', 'description', 'views', 'genres', 'years')
+        fields = ('slug', 'name', 'poster', 'age_rating', 'description', 'views', 'genres', 'years', 'reviews',)
         read_only_fields = ('years',)
 
     def validate_name(self, name):
@@ -70,7 +73,8 @@ class TitleDetailSerializer(serializers.ModelSerializer):
         rep.update({
             'followers': instance.followers.count(),
             'favourite_by': instance.favourite_by.count(),
-            'recommendations': TitleListSerializer(instance=Title.objects.filter(genres__in=instance.genres.all()), many=True).data
+            'recommendations': TitleListSerializer(instance=Title.objects.filter(genres__in=instance.genres.all()),
+                                                   many=True).data
         })
         return rep
 
@@ -90,6 +94,7 @@ class SeasonSerializer(serializers.ModelSerializer):
 
 class SeriesDetailSerializer(serializers.ModelSerializer):
     slug = serializers.ReadOnlyField()
+    comments = CommentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Series
@@ -105,6 +110,11 @@ class SeriesDetailSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         instance = super().create(validated_data)
         return instance
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['likes'] = instance.likes.count()
+        return rep
 
 
 class SeriesListSerializer(serializers.ModelSerializer):

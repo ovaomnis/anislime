@@ -56,10 +56,11 @@ class Season(models.Model):
     number = models.PositiveIntegerField(validators=[
         MinValueValidator(1)
     ])
+    is_film = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(f'season {self.number}', allow_unicode=True)
+            self.slug = slugify("film" if self.is_film else f"season {self.number}", allow_unicode=True)
         return super().save(*args, **kwargs)
 
 
