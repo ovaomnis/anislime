@@ -1,19 +1,39 @@
-# Adil, Sayan, Iskhak - developers
-# Final full stack hakathon
+# AniSlime (Final Hackaton Makers)
+>AniSlime API - is api for a web application built using the Django REST framework. This web application is made for watching anime and discussing it. You can test this [API Documents](http://34.89.235.149/api/v1/swagger/) here.
 
-AniSlime api - is a web application built using the Django REST framework. This web application is made for watching anime and discussing it.
+## Developers
+- Adil (ovaomnis)
+- Sayan (ASayan#$)
+- Iskhak (1sabro)
 
+## Technologies used in project
+- Django REST
+- PostgreSQL
+- Celery
+- Redis
+
+
+### To test our project
 cloning project:
+```
 git clone (SSH-key or HTTP-key)
+```
 
 to start
 installation and dependencies:
+```
 pip3 install -r requirements.txt
+```
 
-running the server: python3 manage.py runserver
+running the server: 
+```
+python3 manage.py runserver
+```
 
-on the AniSlime API web application you can
-1. register
-2. start watching your favorite series
-3. add to favorites or subscribe to this series and receive messages when new episodes are released
+## API Allows
+- **Register**
+- **Start watching your favorite series**
+- **Add to favorites**
+- **Subscribe to Title and receive messages when new episodes are released**
 
+---------------
