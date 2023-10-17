@@ -9,10 +9,16 @@ current_page = 1
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
+    bot.send_message(message.chat.id, 'Hi, what is your name?')
+    bot.register_next_step_handler(message, ask_name)
+
+
+def ask_name(message):
+    user_name = message.text
     markup = telebot.types.InlineKeyboardMarkup()
     item = telebot.types.InlineKeyboardButton("Click to see anime", callback_data='show_anime')
     markup.add(item)
-    bot.reply_to(message, 'Hello, AniSlime API welcomes you, glad to help you!', reply_markup=markup)
+    bot.reply_to(message, f'Hello {user_name.capitalize()}, AniSlime API welcomes you, glad to help you!', reply_markup=markup)
 
 
 def load_anime_from_page(page, chat_id):
