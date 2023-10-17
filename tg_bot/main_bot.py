@@ -18,12 +18,21 @@ def send_welcome(message):
 def send_title_anime(call):
     res = requests.get('http://34.89.235.149/api/v1/title/')
     data = json.loads(res.content)
+    data_next = data.get('next')
+    data_previous = data.get('previous')
     titles = data.get('results')
-    number = 0
-    for i in titles:
-        number += 1
-        bot.send_message(call.message.chat.id, f'Аниме по популярности {number}: \n{i.get("name")}')
 
+    titles_sorted_by_views = sorted(titles, key=lambda x: x.get("views", 0), reverse=True)
+
+    for index, i in enumerate(titles_sorted_by_views, 1):
+        bot.send_message(call.message.chat.id, f'Аниме по популярности {index}: \n{i.get("name")}')
+
+    if data_next:
+        markup = telebot.types.InlineKeyboardMarkup()
+        item = telebot.types.InlineKeyboardButton("Click to see next page of anime", callback_data='show_anime')
+        markup.add(item)
+
+        bot.send_message(call.message.chat.id, "Доступна следующая страница с аниме:", reply_markup=markup)
 
 
 if __name__ == '__main__':
