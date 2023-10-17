@@ -39,7 +39,7 @@ class Title(CreatedUpdatedModelMixin):
 
     poster = models.ImageField(upload_to='title_posters')
     description = models.TextField()
-    views = models.IntegerField(default=0)
+    views = models.PositiveIntegerField(default=0)
     genres = models.ManyToManyField(Genre, related_name='titles', blank=True)
     years = models.ManyToManyField(TitleYear, related_name='titles', blank=True)
     followers = models.ManyToManyField(User, related_name='follows', blank=True)
@@ -56,10 +56,11 @@ class Season(models.Model):
     number = models.PositiveIntegerField(validators=[
         MinValueValidator(1)
     ])
+    is_film = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(f'season {self.number}', allow_unicode=True)
+            self.slug = slugify("film" if self.is_film else f"season {self.number}", allow_unicode=True)
         return super().save(*args, **kwargs)
 
 

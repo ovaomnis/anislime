@@ -6,6 +6,9 @@ from .parser import ParseSeasonSeries
 
 @app.task
 def parse_from_tracker():
-    queryset = TrackAnime.objects.all()
+    queryset = TrackAnime.objects.filter(parsed=False)
     for anime in queryset:
         ParseSeasonSeries(anime.uri, anime.repeat)
+        if not anime.repeat:
+            anime.parsed = True
+            anime.save()

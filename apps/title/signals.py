@@ -1,7 +1,7 @@
+from apps.title.tasks import send_series_followers
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from .models import Series
-from apps.title.tasks import send_series_followers
 
 
 @receiver(post_save, sender=Series)
