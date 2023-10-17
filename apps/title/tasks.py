@@ -5,12 +5,10 @@ from django.template.loader import render_to_string
 
 @app.task
 def send_series_followers(title, emails):
-    # template_message = render_to_string('send_mail.html', {'title': title})
 
     send_mail(
-        'AniSlime',
-        '',
-        f'Hi new series of {title} already out, come to our website and watch it!',
-        'sayansenedwne@gmail.com',
-        emails,
+        subject='AniSlime',
+        message=f'Hi new series of {title} already out, come to our website and watch it!',
+        from_email='sayansenedwne@gmail.com',
+        recipient_list=emails,
     )
